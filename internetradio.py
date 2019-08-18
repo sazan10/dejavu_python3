@@ -2,8 +2,8 @@ import requests
 import time
 import urllib.request
 
-stream_url = 'http://kantipur-stream.softnep.com:7248'
-
+#stream_url = 'http://kantipur-stream.softnep.com:7248'
+stream_url ='http://localhost:3000'
 # r = requests.get(stream_url, stream=True)
 conn = urllib.request.urlopen(stream_url)
 t = time.time()

@@ -1,6 +1,9 @@
 import multiprocessing
 import time
 import urllib.request
+import json
+from dejavu import Dejavu
+from dejavu.recognize import FileRecognizer, MicrophoneRecognizer
 
 '''data1 = (["http://kantipur-stream.softnep.com:7248",'1'],
         ["http://ujyaalo-stream.softnep.com:7710",'2'],
@@ -37,14 +40,20 @@ data1 = ["http://kantipur-stream.softnep.com:7248"
         ,"http://kalika-stream.softnep.com:7740"#
         ,"http://streaming.softnep.net:8085"
         ,"http://streaming.softnep.net:8037"#
-        ,"http://streaming.softnep.net:8091"
+        #,"http://streaming.softnep.net:8091"
         ,"http://streaming.softnep.net:8003"
         ,"http://streaming.softnep.net:8049"#
         ,"http://streaming.softnep.net:8093"
+        #,"http://192.168.10.82:8000"
         ,"http://streaming.softnep.net:8031"
         ,"http://streaming.softnep.net:8057"
         ,"http://streaming.softnep.net:8061"]
-data2=['1','2','3','4','5','6','7','8','9','10','11']#,'12','13','14','15','16','17','18','19','20','21','22','23','24','25','26']
+data2=['1','2','3','4','5','6','7','8','9','10']#,'11']#,'12','13','14','15','16','17','18','19','20','21','22','23','24','25','26']
+
+config =None
+with open("dejavu.cnf") as f:
+    config = json.load(f)
+
 
 def mp_worker(urldata):
     url=None
@@ -54,9 +63,17 @@ def mp_worker(urldata):
     except ValueError:
         pass
     u=urllib.request.urlopen(url)
-    data=u.read(50000)
-    with open('recording'+number+'.mp3','wb') as file:
+    data=u.read(150000)
+    name = 'recording' +number+'.mp3'
+    with open(name,'wb') as file:
         file.write(data)
+    djv = Dejavu(config)
+    song = djv.recognize(FileRecognizer, name)
+    # print("From Stream we recognized: {}\n".format(song))
+    if song['confidence']>500:
+        print("From file we recognized: {}\n".format(song["song_name"]))
+    else:
+        print("None")
 
 t=time.time()
 if __name__ == '__main__':
