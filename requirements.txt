@@ -1,0 +1,10 @@
+# requirements file
+
+### BEGIN ###
+pydub==0.9.4
+PyAudio>=0.2.7
+numpy
+scipy
+matplotlib
+mysql-connector-python
+### END ###
