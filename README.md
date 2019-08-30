@@ -340,5 +340,9 @@ Create a dejavu.cnf file since it was ignored in gitignore :
         "user": "root",
         "passwd": "password", 
         "db": "dejavu"
-    }
+    },
+	"database_engine": "mongo"
 }
+add database_engine as required 
+for mongo -> database_engine = mongo
+for sql -> database_engine = sql 
