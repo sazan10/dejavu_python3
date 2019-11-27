@@ -18,11 +18,11 @@ client = session.client('s3',
                         aws_access_key_id='T73DNHQ2DPI4PB35JCDT',
                         aws_secret_access_key='eSsUdEHEqwaS7ph6VBnn8qnwtVhBf09hCXL0GdWzfzc')
 # get the names of all the songs
-songs_arr = client.list_objects(Bucket='songs-1')['contents']
+songs_arr = client.list_objects(Bucket='songs-1')['Contents']
 # pop out the dir name
 songs_arr.pop(0)
-num_vcpu = '4'
-dir_name = 'song_dir'
+num_vcpu = 4
+dir_name = 'fopi_songs'
 
 with open("dejavu.cnf") as f:
         config = json.load(f)
@@ -31,18 +31,19 @@ if __name__ == '__main__':
 
         # create a Dejavu instance
     djv = Dejavu(config)
-
+    os.mkdir(dir_name)
     # Fingerprint all the mp3's in the directory we give it
    
     for num, song in enumerate(songs_arr):
         print(num, song)
-        os.mkdir(dir_name)
+        
         client.download_file(Bucket='songs-1',
                             Key=song['Key'],
-                            Filename=os.path.join(dir_name, song['Key']))
+                            Filename=song['Key'])
         if (num+1 == len(song)) or (num+1 % num_vcpu == 0):
             djv.fingerprint_directory(dir_name, [".mp3"])
             os.removedirs(dir_name)
+            os.mkdir(dir_name)
             # load config from a JSON file (or anything outputting a python dictionary)
     
     # Recognize audio from a file
