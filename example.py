@@ -1,4 +1,5 @@
 import os
+import shutil
 from botocore.client import Config
 import boto3
 from dejavu.recognize import FileRecognizer, MicrophoneRecognizer
@@ -21,23 +22,11 @@ client = session.client('s3',
 songs_arr = client.list_objects(Bucket='songs-1')['contents']
 # pop out the dir name
 songs_arr.pop(0)
-
-dir_name = 'song_dir'
-
 num_vcpu = '4'
-for num, song in songs_arr:
-    os.mkdir(dir_name)
-    client.download_file(Bucket='songs-1',
-                         Key=song['Key'],
-                         Filename=song['Key'])
-    if num % num_vcpu == 0:
-        for song in os.listdir(dir_name):
-                # fingerprint the songs here ok
-            pass
-        os.removedirs(dir_name)
-        # load config from a JSON file (or anything outputting a python dictionary)
+dir_name = 'fopi_songs'
+
 with open("dejavu.cnf") as f:
-    config = json.load(f)
+        config = json.load(f)
 
 if __name__ == '__main__':
 
@@ -45,12 +34,24 @@ if __name__ == '__main__':
     djv = Dejavu(config)
 
     # Fingerprint all the mp3's in the directory we give it
-    djv.fingerprint_directory("mp3", [".mp3"])
-
+   
+    for num, song in enumerate(songs_arr, 1):
+        print(num, song)
+        os.mkdir(dir_name)
+        client.download_file(Bucket='songs-1',
+                            Key=song['Key'],
+                            Filename=os.path.join(dir_name, song['Key']))
+        if ((num) == len(songs_arr)) or (((num) % num_vcpu) == 0):
+            djv.fingerprint_directory(dir_name, [".mp3"])
+            shutil.rmtree(dir_name)
+            print('\n\n************')
+            print('finger printed ', num, ' songs')
+            # load config from a JSON file (or anything outputting a python dictionary)
+    
     # Recognize audio from a file
-    song = djv.recognize(
-        FileRecognizer, "mp3/Sean-Fournier--Falling-For-You.mp3")
-    print("From file we recognized: {}\n".format(song))
+    # song = djv.recognize(
+    #    FileRecognizer, "mp3/Sean-Fournier--Falling-For-You.mp3")
+    #print("From file we recognized: {}\n".format(song))
     #song = djv.recognize(FileRecognizer, "mp3/01 Aakhako Bato.mp3")
     #print("From file we recognized: {}\n".format(song))
 
