@@ -1,10 +1,13 @@
 import os
+import shutil
 from botocore.client import Config
 import boto3
 from dejavu.recognize import FileRecognizer, MicrophoneRecognizer
 from dejavu import Dejavu
 import warnings
 import json
+import time
+import csv
 warnings.filterwarnings("ignore")
 
 
@@ -23,27 +26,44 @@ songs_arr = client.list_objects(Bucket='songs-1')['Contents']
 songs_arr.pop(0)
 num_vcpu = 4
 dir_name = 'fopi_songs'
+if os.path.isdir(dir_name):
+    shutil.rmtree(dir_name)
 
 with open("dejavu.cnf") as f:
-        config = json.load(f)
+    config = json.load(f)
+
 
 if __name__ == '__main__':
 
         # create a Dejavu instance
     djv = Dejavu(config)
     os.mkdir(dir_name)
+    
     # Fingerprint all the mp3's in the directory we give it
-   
-    for num, song in enumerate(songs_arr):
-        print(num, song)
-        
+    songs_tag=[]
+    starting_time=time.time()
+    print ("start time: ",starting_time)
+    for num, song in enumerate(songs_arr, 1):    
         client.download_file(Bucket='songs-1',
                             Key=song['Key'],
                             Filename=song['Key'])
-        if (num+1 == len(song)) or (num+1 % num_vcpu == 0):
+        songs_tag.append(song['Key'])
+        if ((num) == len(songs_arr)) or (((num) % num_vcpu) == 0):
+            start=time.time()
             djv.fingerprint_directory(dir_name, [".mp3"])
-            os.removedirs(dir_name)
+            print("batch:",songs_tag,time.time()-start)
+            with open('log.csv', 'a') as writeFile:
+               writer= csv.writer(writeFile)
+               writer.writerows([[num/4,songs_tag,time.time()-start]])
+            songs_tag=[]
+            shutil.rmtree(dir_name)
             os.mkdir(dir_name)
+    final_end_time=time.time()
+    print("end time: ", final_end_time)
+    with open('total_time.csv', 'a') as writeFile:
+        writer = csv.writer(writeFile)
+        writer.writerows([["complete time",final_end_time-starting_time]])
+
             # load config from a JSON file (or anything outputting a python dictionary)
     
     # Recognize audio from a file

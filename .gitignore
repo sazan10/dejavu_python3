@@ -8,3 +8,5 @@ mp3
 .vscode
 stream.mp3
 stream1.mp3
+file_reader.ipynb
+.ipynb_checkpoints/
