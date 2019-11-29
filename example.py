@@ -8,6 +8,7 @@ import warnings
 import json
 import time
 import csv
+import pandas as pd
 warnings.filterwarnings("ignore")
 
 
@@ -25,10 +26,23 @@ songs_arr = client.list_objects(Bucket='songs-1')['Contents']
 # pop out the dir name
 songs_arr.pop(0)
 num_vcpu = 4
+
+# delete previous os dir
 dir_name = 'fopi_songs'
 if os.path.isdir(dir_name):
     shutil.rmtree(dir_name)
 
+# read from log
+last_run_at = 0
+if os.path.isfile('log.csv'):
+    df = pd.read_csv('log.csv', header=None)
+    last_run_at = int(df.tail(1)[0]) - 1
+
+# update song_arr
+start_from = last_run_at*num_vcpu + num_vcpu-1
+song_arr = song_arr[start_from:]
+
+# load config for dejavu db
 with open("dejavu.cnf") as f:
     config = json.load(f)
 
