@@ -4,6 +4,7 @@ import urllib.request
 import json
 from dejavu import Dejavu
 from dejavu.recognize import FileRecognizer, MicrophoneRecognizer
+from dejavu.database import get_database, Database
 
 '''data1 = (["http://kantipur-stream.softnep.com:7248",'1'],
         ["http://ujyaalo-stream.softnep.com:7710",'2'],
@@ -37,18 +38,18 @@ from dejavu.recognize import FileRecognizer, MicrophoneRecognizer
         ["http://streaming.softnep.net:8061",'30']
 )'''
 data1 = ["http://kantipur-stream.softnep.com:7248"
-        ,"http://kalika-stream.softnep.com:7740"#
-        ,"http://streaming.softnep.net:8085"
-        ,"http://streaming.softnep.net:8037"#
+        # ,"http://kalika-stream.softnep.com:7740"#
+        # ,"http://streaming.softnep.net:8085"
+        # ,"http://streaming.softnep.net:8037"#
         #,"http://streaming.softnep.net:8091"
         ,"http://streaming.softnep.net:8003"
-        ,"http://streaming.softnep.net:8049"#
+        # ,"http://streaming.softnep.net:8049"#
         ,"http://streaming.softnep.net:8093"
         #,"http://192.168.10.82:8000"
         ,"http://streaming.softnep.net:8031"
-        ,"http://streaming.softnep.net:8057"
-        ,"http://streaming.softnep.net:8061"]
-data2=['1','2','3','4','5','6','7','8','9','10']#,'11']#,'12','13','14','15','16','17','18','19','20','21','22','23','24','25','26']
+        ,"http://streaming.softnep.net:8057"]
+        #,"http://streaming.softnep.net:8061"]
+data2=['1','2','3','4','5']#,'11']#,'12','13','14','15','16','17','18','19','20','21','22','23','24','25','26']
 
 config =None
 with open("dejavu.cnf") as f:
@@ -58,25 +59,40 @@ with open("dejavu.cnf") as f:
 def mp_worker(urldata):
     url=None
     number=None
+    song=None
     try:
         url, number=urldata
     except ValueError:
         pass
-    u=urllib.request.urlopen(url)
-    data=u.read(150000)
-    name = 'recording' +number+'.mp3'
-    with open(name,'wb') as file:
-        file.write(data)
-    djv = Dejavu(config)
-    song = djv.recognize(FileRecognizer, name)
-    # print("From Stream we recognized: {}\n".format(song))
-    if song['confidence']>500:
-        print("From file we recognized: {}\n".format(song["song_name"]))
-    else:
-        print("None")
+    try:
+        u=urllib.request.urlopen(url)
+        data=u.read(150000)
+        name = 'recording' +number+'.mp3'
+        with open(name,'wb') as file:
+            file.write(data)
+            time.sleep(1)
+    except Exception as e:
+        print (e)
+    try:
+        djv = Dejavu(config)
+        song = djv.recognize(FileRecognizer, name)
+        # print("From Stream we recognized: {}\n".format(song))
+        if not song:
+            print("NONE")
+        if song['confidence']>100:
+            db_cls = get_database(config.get("database_type", None))
+            db = db_cls(**config.get("database", {}))
+            db.setup()
+            count = db.get_song_count_by_name(song["song_name"])
+            db.update_song_count(song["song_name"],count['count']+1)
+            print("From file we recognized: {} {}\n".format(song["song_name"], count))
+        else:
+            print("Identified with very low confidence",song['confidence'])
+    except Exception as e:
+        print(e)
 
-t=time.time()
-if __name__ == '__main__':
+# t=time.time()
+def proc():
     nProcessor=multiprocessing.cpu_count()
     p = multiprocessing.Pool(nProcessor)
     data=zip(data1,data2)
@@ -88,5 +104,15 @@ if __name__ == '__main__':
             break
     # iterator=p.map(mp_worker, data1)
     p.close()
-    t2=time.time()-t
-    print("time taken",t2)
+    # t2=time.time()-t
+    # print("time taken",t2)
+
+if __name__ == '__main__':
+    current=time.time()
+    proc()
+    while True: 
+        now =time.time()
+        if (now-current) >=40:
+            proc()
+            current=time.time()
+

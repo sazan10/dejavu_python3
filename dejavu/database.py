@@ -13,6 +13,7 @@ class Database():
     FIELD_SONGNAME = 'song_name'
     FIELD_OFFSET = 'offset'
     FIELD_HASH = 'hash'
+    FIELD_COUNT = 'count'
 
     # Name of your Database subclass, this is used in configuration
     # to refer to your class
@@ -116,6 +117,18 @@ class Database():
         """
         pass
 
+    @abc.abstractmethod
+    def insert_songs_count(self, song_name):
+        pass
+
+    @abc.abstractmethod
+    def get_song_count_by_name(self, song_name):
+        pass
+
+    @abc.abstractmethod
+    def update_song_count(self, song_name, count):
+        pass
+    
     @abc.abstractmethod
     def query(self, hash):
         """
