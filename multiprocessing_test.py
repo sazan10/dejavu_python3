@@ -60,14 +60,16 @@ def mp_worker(urldata):
     url=None
     number=None
     song=None
+    name=None
     try:
         url, number=urldata
+        name = 'recording' +number+'.mp3'
     except ValueError:
         pass
     try:
         u=urllib.request.urlopen(url)
-        data=u.read(150000)
-        name = 'recording' +number+'.mp3'
+        data=u.read(90000)
+
         with open(name,'wb') as file:
             file.write(data)
             time.sleep(1)
