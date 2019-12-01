@@ -49,7 +49,7 @@ data1 = ["http://kantipur-stream.softnep.com:7248"
         ,"http://streaming.softnep.net:8031"
         ,"http://streaming.softnep.net:8057"]
         #,"http://streaming.softnep.net:8061"]
-data2=['1','2','3','4','5']#,'11']#,'12','13','14','15','16','17','18','19','20','21','22','23','24','25','26']
+data2=['1','2','3','4','5','6','7']#,'11']#,'12','13','14','15','16','17','18','19','20','21','22','23','24','25','26']
 
 config =None
 with open("dejavu.cnf") as f:
@@ -60,16 +60,15 @@ def mp_worker(urldata):
     url=None
     number=None
     song=None
-    name=None
+    name =None
     try:
         url, number=urldata
-        name = 'recording' +number+'.mp3'
+        name= 'recording' +number+'.mp3'
     except ValueError:
         pass
     try:
         u=urllib.request.urlopen(url)
-        data=u.read(90000)
-
+        data=u.read(150000)
         with open(name,'wb') as file:
             file.write(data)
             time.sleep(1)
@@ -79,9 +78,12 @@ def mp_worker(urldata):
         djv = Dejavu(config)
         song = djv.recognize(FileRecognizer, name)
         # print("From Stream we recognized: {}\n".format(song))
-        if not song:
+        print(song)
+        if type(song)=="NoneType":
             print("NONE")
-        if song['confidence']>100:
+        elif song is None:
+            print("NONE")
+        elif song['confidence']>100:
             db_cls = get_database(config.get("database_type", None))
             db = db_cls(**config.get("database", {}))
             db.setup()
@@ -89,11 +91,11 @@ def mp_worker(urldata):
             db.update_song_count(song["song_name"],count['count']+1)
             print("From file we recognized: {} {}\n".format(song["song_name"], count))
         else:
-            print("Identified with very low confidence",song['confidence'])
+            print("Identified with very low confidence")#,song['confidence'])
     except Exception as e:
         print(e)
 
-# t=time.time()
+t=time.time()
 def proc():
     nProcessor=multiprocessing.cpu_count()
     p = multiprocessing.Pool(nProcessor)
@@ -106,15 +108,16 @@ def proc():
             break
     # iterator=p.map(mp_worker, data1)
     p.close()
-    # t2=time.time()-t
-    # print("time taken",t2)
+    t2=time.time()-t
+    print("time taken",t2)
 
 if __name__ == '__main__':
     current=time.time()
     proc()
     while True: 
         now =time.time()
-        if (now-current) >=40:
+        if (now-current) >=20:
             proc()
             current=time.time()
+
 
