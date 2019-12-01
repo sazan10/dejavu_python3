@@ -116,7 +116,7 @@ if __name__ == '__main__':
     proc()
     while True: 
         now =time.time()
-        if (now-current) >=20:
+        if (now-current) >=40:
             proc()
             current=time.time()
 
