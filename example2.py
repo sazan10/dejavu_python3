@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
 	# Recognize audio from a file
 	song = djv.recognize(FileRecognizer, "mp3/recording2.mp3")
-	if song['confidence']>500:
+	if song['confidence']>100:
 		db_cls = get_database(config.get("database_type", None))
 		db = db_cls(**config.get("database", {}))
 		db.setup()
