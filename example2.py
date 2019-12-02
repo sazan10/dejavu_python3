@@ -19,7 +19,7 @@ if __name__ == '__main__':
 	djv.fingerprint_directory("mp3", [".mp3"])
 
 	# Recognize audio from a file
-	song = djv.recognize(FileRecognizer, "mp3/aadha_raat_ma_mero_mamin_shakya.mp3")
+	song = djv.recognize(FileRecognizer, "mp3/recording2.mp3")
 	if song['confidence']>500:
 		db_cls = get_database(config.get("database_type", None))
 		db = db_cls(**config.get("database", {}))

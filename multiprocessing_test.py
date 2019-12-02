@@ -78,12 +78,11 @@ def mp_worker(urldata):
         djv = Dejavu(config)
         song = djv.recognize(FileRecognizer, name)
         # print("From Stream we recognized: {}\n".format(song))
-        print(song)
         if type(song)=="NoneType":
             print("NONE")
         elif song is None:
             print("NONE")
-        elif song['confidence']>100:
+        elif song['confidence']>=4:
             db_cls = get_database(config.get("database_type", None))
             db = db_cls(**config.get("database", {}))
             db.setup()

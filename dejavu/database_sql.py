@@ -49,6 +49,7 @@ class SQLDatabase(Database):
 	# tables
 	FINGERPRINTS_TABLENAME = "fingerprints"
 	SONGS_TABLENAME = "songs"
+	SONGS_COUNT_TABLENAME = "counts"
 
 	# fields
 	FIELD_FINGERPRINTED = "fingerprinted"
@@ -82,6 +83,17 @@ class SQLDatabase(Database):
 		Database.FIELD_FILE_SHA1,
 		Database.FIELD_SONG_ID, Database.FIELD_SONG_ID, Database.FIELD_SONG_ID,
 	)
+	
+	CREATE_SONGS_COUNT_TABLE = """
+		CREATE TABLE IF NOT EXISTS `%s` (
+			`%s` mediumint unsigned not null auto_increment,
+			`%s` varchar(250) not null,
+			`%s` int unsigned not null default 0,
+		PRIMARY KEY (`%s`)
+	) ENGINE=INNODB;""" % (
+		SONGS_COUNT_TABLENAME, Database.FIELD_SONG_ID, Database.FIELD_SONGNAME, Database.FIELD_COUNT,
+		Database.FIELD_SONG_ID
+	)
 
 	# inserts (ignores duplicates)
 	INSERT_FINGERPRINT = """
@@ -91,6 +103,10 @@ class SQLDatabase(Database):
 
 	INSERT_SONG = "INSERT INTO %s (%s, %s) values (%%s, UNHEX(%%s));" % (
 		SONGS_TABLENAME, Database.FIELD_SONGNAME, Database.FIELD_FILE_SHA1)
+
+	INSERT_COUNT = "INSERT INTO %s (%s) values (%%s);" % (
+		SONGS_COUNT_TABLENAME, Database.FIELD_SONGNAME
+	)
 
 	# selects
 	SELECT = """
@@ -109,7 +125,11 @@ class SQLDatabase(Database):
 	SELECT_SONG = """
 		SELECT %s, HEX(%s) as %s FROM %s WHERE %s = %%s;
 	""" % (Database.FIELD_SONGNAME, Database.FIELD_FILE_SHA1, Database.FIELD_FILE_SHA1, SONGS_TABLENAME, Database.FIELD_SONG_ID)
-
+	
+	SELECT_SONG_COUNT = """
+		SELECT %s FROM %s WHERE %s = %%s;
+	""" % (Database.FIELD_COUNT, SONGS_COUNT_TABLENAME, Database.FIELD_SONGNAME)
+	
 	SELECT_NUM_FINGERPRINTS = """
 		SELECT COUNT(*) as n FROM %s
 	""" % (FINGERPRINTS_TABLENAME)
@@ -126,11 +146,16 @@ class SQLDatabase(Database):
 	# drops
 	DROP_FINGERPRINTS = "DROP TABLE IF EXISTS %s;" % FINGERPRINTS_TABLENAME
 	DROP_SONGS = "DROP TABLE IF EXISTS %s;" % SONGS_TABLENAME
+	DROP_SONGS_COUNT = "DROP TABLE IF EXISTS %s;" % SONGS_COUNT_TABLENAME
 
 	# update
 	UPDATE_SONG_FINGERPRINTED = """
 		UPDATE %s SET %s = 1 WHERE %s = %%s
 	""" % (SONGS_TABLENAME, FIELD_FINGERPRINTED, Database.FIELD_SONG_ID)
+
+	UPDATE_SONG_COUNT = """
+		UPDATE %s SET %s = %%s WHERE %s = %%s
+	""" % (SONGS_COUNT_TABLENAME, Database.FIELD_COUNT, Database.FIELD_SONGNAME)
 
 	# delete
 	DELETE_UNFINGERPRINTED = """
@@ -157,6 +182,7 @@ class SQLDatabase(Database):
 		with self.cursor() as cur:
 			cur.execute(self.CREATE_SONGS_TABLE)
 			cur.execute(self.CREATE_FINGERPRINTS_TABLE)
+			cur.execute(self.CREATE_SONGS_COUNT_TABLE)
 			cur.execute(self.DELETE_UNFINGERPRINTED)
 
 	def empty(self):
@@ -170,6 +196,7 @@ class SQLDatabase(Database):
 		with self.cursor() as cur:
 			cur.execute(self.DROP_FINGERPRINTS)
 			cur.execute(self.DROP_SONGS)
+			cur.execute(self.DROP_SONGS_COUNT)
 
 		self.setup()
 
@@ -227,6 +254,17 @@ class SQLDatabase(Database):
 			cur.execute(self.SELECT_SONG, (sid,))
 			return cur.fetchone()
 
+	def get_song_count_by_name(self, song_name):
+
+		with self.cursor(cursor_class=cursor.MySQLCursorDict) as cur:
+			cur.execute(self.SELECT_SONG_COUNT, (song_name,))
+			return cur.fetchone()
+
+	def update_song_count(self, song_name, count):
+
+		with self.cursor() as cur:
+			cur.execute(self.UPDATE_SONG_COUNT,(count, song_name))
+
 	def insert(self, hash, sid, offset):
 		"""
 		Insert a (sha1, song_id, offset) row into database.
@@ -240,6 +278,12 @@ class SQLDatabase(Database):
 		"""
 		with self.cursor() as cur:
 			cur.execute(self.INSERT_SONG, (songname, file_hash))
+			return cur.lastrowid
+
+	def insert_songs_count(self, songname):
+
+		with self.cursor() as cur:
+			cur.execute(self.INSERT_COUNT,(songname,))
 			return cur.lastrowid
 
 	def query(self, hash):

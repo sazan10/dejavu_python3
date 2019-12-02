@@ -92,6 +92,7 @@ class Dejavu():
 				traceback.print_exc(file=sys.stdout)
 			else:
 				sid = self.db.insert_song(song_name, file_hash)
+				sid1 = self.db.insert_songs_count(song_name)
 				self.db.insert_hashes(sid, hashes)
 				self.db.set_song_fingerprinted(sid)
 				self.get_fingerprinted_songs()
