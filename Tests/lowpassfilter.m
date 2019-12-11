@@ -60,8 +60,8 @@ plot(psd(spectrum.periodogram,dataRight,'Fs',Fs,'NFFT',length(dataRight)));
 %clipped
 
 %% Implementing Filter
-cutoff = 4700/Fs/2;   %in normalized -> Fc / (Fs/2) 
-order = 100;
+cutoff = 4175/Fs/2;   %in normalized -> Fc / (Fs/2) 
+order = 20;
 h = fir1(order,cutoff);
 tic;
 filteredSignal = conv(h,dataRight);
