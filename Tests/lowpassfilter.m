@@ -1,15 +1,17 @@
 %% Reading Data for 10 seconds
-Fs = 22050; %known beforehand
-samples = [1,10*Fs];
-[data,Fs] = audioread('Recording1.mp3',samples);
+Fs = 44100; %known beforehand
+samples = [1,20*Fs];
+[data,Fs] = audioread('coke.mp3',samples);
+downsampled = downsample(data,2);
 
 %% Play sound
-sound(data,Fs);
+sound(downsampled,Fs/2)
+%sound(data,Fs);
 %data shows the recording is from 2 channel microphones i.e left and right
 
 %extracting either left or right channel data
 
-dataRight = data(:,1);
+dataRight = downsampled(:,1);
 dataLeft = data(:,2);
 
 %% Again play from one channel
@@ -53,14 +55,14 @@ axis tight
 %over frequency components.
 
 figure(3)
-plot(psd(spectrum.periodogram,dataRight,'Fs',Fs,'NFFT',length(dataRight)));
+plot(psd(spectrum.periodogram,dataRight,'Fs',Fs/2,'NFFT',length(dataRight)));
 
 %from psd it can be seen that below 4.6 kHz, more power is concentrated so,
 %below nearly 4.6 kHz is required signal and above 4.6 kHz, the signal can be
 %clipped
 
 %% Implementing Filter
-cutoff = 4175/Fs/2;   %in normalized -> Fc / (Fs/2) 
+cutoff = 4000/Fs/2;   %in normalized -> Fc / (Fs/2) 
 order = 20;
 h = fir1(order,cutoff);
 tic;
@@ -70,7 +72,7 @@ figure(4)
 %plot(filteredSignal)
 %axis tight;
 plot(psd(spectrum.periodogram,filteredSignal,'Fs',Fs,'NFFT',length(filteredSignal)));
-sound(filteredSignal,Fs)
+sound(filteredSignal,Fs/2)
 %we can see that in log scale the frequency component over 4700 hertz is
 %rolled over and cutoff 
 
