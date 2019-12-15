@@ -30,6 +30,7 @@ from scipy import signal
 def firFilter(audio_data,fs,cutoff_frequency = 4000,filter_order = 50):
     
     #Min-Max Normalization
+    audio_data = audio_data/max(audio_data)
     min_data = min(audio_data)
     max_data = max(audio_data)
     audio_data = (audio_data - min_data)/(max_data - min_data)
