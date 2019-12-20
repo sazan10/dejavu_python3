@@ -52,8 +52,12 @@ data1 = ["http://kantipur-stream.softnep.com:7248"
 data2=['1','2','3','4','5','6','7']#,'11']#,'12','13','14','15','16','17','18','19','20','21','22','23','24','25','26']
 
 config =None
+db = None
 with open("dejavu.cnf") as f:
     config = json.load(f)
+    db_cls = get_database(config.get("database_type", None))
+    db = db_cls(**config.get("database", {}))
+    db.setup()
 
 
 def mp_worker(urldata):
@@ -80,21 +84,24 @@ def mp_worker(urldata):
         # print("From Stream we recognized: {}\n".format(song))
         if song is None:
             print("NONE")
-        elif song['confidence']>=100:
-            db_cls = get_database(config.get("database_type", None))
-            db = db_cls(**config.get("database", {}))
-            db.setup()
+        elif song['confidence']>=40:
             count = db.get_song_count_by_name(song["song_name"])
             db.update_song_count(song["song_name"],count['count']+1)
-            print("From file we recognized: {} {}\n".format(song["song_name"], count))
+            if db.get_radio_song_count(number,song["song_name"]) == None:
+                db.insert_radio_song(number,song["song_name"])
+            else:
+                count = db.get_radio_song_count(number,song["song_name"])
+                db.update_radio_song_count(number,song["song_name"],count['count'] +1)
+            print("From file we recognized: {} {} {}\n".format(song["song_name"], count,song['confidence']))
         else:
-            print("Identified with very low confidence")#,song['confidence'])
+            print("Identified with very low confidence ",song['confidence'], name, song['song_name'])
     except Exception as e:
         print(e)
 
 t=time.time()
 def proc():
     nProcessor=multiprocessing.cpu_count()
+    # radio = db.get_all_radio()
     p = multiprocessing.Pool(nProcessor)
     data=zip(data1,data2)
     iterator=p.imap_unordered(mp_worker, data)
