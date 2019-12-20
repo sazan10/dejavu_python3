@@ -1,4 +1,3 @@
-
 import multiprocessing
 import time
 import urllib.request
@@ -48,10 +47,9 @@ data1 = ["http://kantipur-stream.softnep.com:7248"
         ,"http://streaming.softnep.net:8093"
         #,"http://192.168.10.82:8000"
         ,"http://streaming.softnep.net:8031"
-        ,"http://streaming.softnep.net:8057"]
+       ]
         #,"http://streaming.softnep.net:8061"]
-data2=['kantipur','butwal','kalaiya','softnep','makwanpur']#,'11']#,'12','13','14','15','16','17','18','19','20','21','22','23','24','25','26']
-
+data2=['1','2','3','4']
 config =None
 with open("dejavu.cnf") as f:
     config = json.load(f)
@@ -64,38 +62,17 @@ def mp_worker(urldata):
     name =None
     try:
         url, number=urldata
-        name= 'recording' +number+'.mp3'
+        name= 'Recording' +number+'.mp3'
     except ValueError:
         pass
     try:
         u=urllib.request.urlopen(url)
-        data=u.read(100000)
+        data=u.read(43200000)
         with open(name,'wb') as file:
             file.write(data)
             time.sleep(1)
     except Exception as e:
         print (e)
-    try:
-        djv = Dejavu(config)
-        song = djv.recognize(FileRecognizer, name)
-        # print("From Stream we recognized: {}\n".format(song))
-        if song is None:
-            print("NONE")
-        elif song['confidence']>=100:
-            db_cls = get_database(config.get("database_type", None))
-            db = db_cls(**config.get("database", {}))
-            db.setup()
-            count = db.get_song_count_by_name(song["song_name"])
-            db.update_song_count(song["song_name"],count['count']+1)
-            print("From file we recognized: {} {}\n".format(song["song_name"], count))
-            with open('log.txt','a') as writeFile:
-                writeFile.write("\n Identified with high confidence %d %s" %(song['confidence'],song["song_name"]))
-        else:
-            print("Identified with very low confidence %d" %song['confidence'])
-            with open('log.txt','a') as writeFile:
-                writeFile.write("\n Identified with very less confidence %d %s" %(song['confidence'],song["song_name"]))
-    except Exception as e:
-        print(e)
 
 t=time.time()
 def proc():
@@ -111,15 +88,9 @@ def proc():
     # iterator=p.map(mp_worker, data1)
     p.close()
     t2=time.time()-t
-    print("time taken",t2)
+    print("writing time taken",t2)
 
 if __name__ == '__main__':
     current=time.time()
     proc()
-    while True: 
-        now =time.time()
-        if (now-current) >=40:
-            proc()
-            current=time.time()
-
 

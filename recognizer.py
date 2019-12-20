@@ -6,7 +6,7 @@ import json
 from dejavu import Dejavu
 from dejavu.recognize import FileRecognizer, MicrophoneRecognizer
 from dejavu.database import get_database, Database
-
+import os.path
 '''data1 = (["http://kantipur-stream.softnep.com:7248",'1'],
         ["http://ujyaalo-stream.softnep.com:7710",'2'],
         ["http://kalika-stream.softnep.com:7740",'3'],
@@ -48,15 +48,17 @@ data1 = ["http://kantipur-stream.softnep.com:7248"
         ,"http://streaming.softnep.net:8093"
         #,"http://192.168.10.82:8000"
         ,"http://streaming.softnep.net:8031"
-        ,"http://streaming.softnep.net:8057"]
+        ,"http://streaming.softnep.net:8057"
+        ,"http://streaming.softnep.net:8003"]
         #,"http://streaming.softnep.net:8061"]
-data2=['kantipur','butwal','kalaiya','softnep','makwanpur']#,'11']#,'12','13','14','15','16','17','18','19','20','21','22','23','24','25','26']
+data2=['kantipur','butwal','kalaiya','softnep','makwanpur','BUTWALL']#,'11']#,'12','13','14','15','16','17','18','19','20','21','22','23','24','25','26']
 
 config =None
 with open("dejavu.cnf") as f:
     config = json.load(f)
 
 
+save_path='check/'
 def mp_worker(urldata):
     url=None
     number=None
@@ -64,20 +66,20 @@ def mp_worker(urldata):
     name =None
     try:
         url, number=urldata
-        name= 'recording' +number+'.mp3'
+        name= number+'.mp3'
     except ValueError:
         pass
     try:
         u=urllib.request.urlopen(url)
-        data=u.read(100000)
-        with open(name,'wb') as file:
+        data=u.read(90000)
+        with open(os.path.join(save_path,name),'wb') as file:
             file.write(data)
-            time.sleep(1)
+        time.sleep(1)
     except Exception as e:
         print (e)
     try:
         djv = Dejavu(config)
-        song = djv.recognize(FileRecognizer, name)
+        song = djv.recognize(FileRecognizer, os.path.join(save_path,name))
         # print("From Stream we recognized: {}\n".format(song))
         if song is None:
             print("NONE")
@@ -88,20 +90,21 @@ def mp_worker(urldata):
             count = db.get_song_count_by_name(song["song_name"])
             db.update_song_count(song["song_name"],count['count']+1)
             print("From file we recognized: {} {}\n".format(song["song_name"], count))
-            with open('log.txt','a') as writeFile:
-                writeFile.write("\n Identified with high confidence %d %s" %(song['confidence'],song["song_name"]))
+            with open(os.path.join(save_path,'log2.txt'),'a') as writeFile:
+                writeFile.write("\n High confidence %d %s FileName=%s" %(song['confidence'],song["song_name"],name))
         else:
-            print("Identified with very low confidence %d" %song['confidence'])
-            with open('log.txt','a') as writeFile:
-                writeFile.write("\n Identified with very less confidence %d %s" %(song['confidence'],song["song_name"]))
+            print("Low confidence %d" %song['confidence'])
+            with open(os.path.join(save_path,'log2.txt'),'a') as writeFile:
+                writeFile.write("\n Low confidence %d %s FileName=%s" %(song['confidence'],song["song_name"],name))
     except Exception as e:
         print(e)
 
 t=time.time()
-def proc():
+def proc(a):
     nProcessor=multiprocessing.cpu_count()
     p = multiprocessing.Pool(nProcessor)
-    data=zip(data1,data2)
+    data3= [x+"batch"+str(a) for x in data2]
+    data=zip(data1,data3)
     iterator=p.imap_unordered(mp_worker, data)
     while True:
         try:
@@ -115,11 +118,13 @@ def proc():
 
 if __name__ == '__main__':
     current=time.time()
-    proc()
+    inc=0
+    proc(inc)
     while True: 
         now =time.time()
-        if (now-current) >=40:
-            proc()
+        if (now-current) >=20:
+            inc=inc+1
+            proc(inc)
             current=time.time()
 
 
