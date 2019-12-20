@@ -50,6 +50,8 @@ class SQLDatabase(Database):
 	FINGERPRINTS_TABLENAME = "fingerprints"
 	SONGS_TABLENAME = "songs"
 	SONGS_COUNT_TABLENAME = "counts"
+	RADIO_TABLENAME = "radio"
+	RADIO_SONG_TABLENAME = "radio_counts"
 
 	# fields
 	FIELD_FINGERPRINTED = "fingerprinted"
@@ -95,6 +97,30 @@ class SQLDatabase(Database):
 		Database.FIELD_SONG_ID
 	)
 
+	CREATE_RADIO_TABLE = """
+		CREATE TABLE IF NOT EXISTS `%s` (
+			`%s` mediumint unsigned not null auto_increment,
+			`%s` varchar(250) not null,
+			`%s` varchar(250),
+		PRIMARY KEY (`%s`)
+	) ENGINE=INNODB;""" % (
+		RADIO_TABLENAME, Database.FIELD_RADIO_ID, Database.FIELD_RADIO_NAME, Database.FIELD_RADIO_URL,
+		Database.FIELD_RADIO_ID
+	)
+
+	CREATE_RADIO_SONG_COUNT = """
+		CREATE TABLE IF NOT EXISTS `%s` (
+			`%s` mediumint unsigned not null auto_increment,
+			`%s` varchar(250) not null,
+			`%s` varchar(250) not null,
+			`%s` int unsigned not null default 0,
+		PRIMARY KEY (`%s`)
+	) ENGINE=INNODB;""" %(
+		RADIO_SONG_TABLENAME, Database.FIELD_RADIO_SONG_ID, Database.FIELD_RADIO_NAME, Database.FIELD_SONGNAME,
+		Database.FIELD_COUNT,
+		Database.FIELD_RADIO_SONG_ID
+	)
+
 	# inserts (ignores duplicates)
 	INSERT_FINGERPRINT = """
 		INSERT IGNORE INTO %s (%s, %s, %s) values
@@ -106,6 +132,14 @@ class SQLDatabase(Database):
 
 	INSERT_COUNT = "INSERT INTO %s (%s) values (%%s);" % (
 		SONGS_COUNT_TABLENAME, Database.FIELD_SONGNAME
+	)
+
+	INSERT_RADIO = "INSERT INTO %s (%s, %s) values (%%s, %%s);" % (
+		RADIO_TABLENAME, Database.FIELD_RADIO_NAME, Database.FIELD_RADIO_URL
+	)
+
+	INSERT_RADIO_SONG_COUNT = "INSERT INTO %s (%s, %s, %s) values (%%s, %%s, %%s);" % (
+		RADIO_SONG_TABLENAME, Database.FIELD_RADIO_NAME, Database.FIELD_SONGNAME, Database.FIELD_COUNT
 	)
 
 	# selects
@@ -129,6 +163,22 @@ class SQLDatabase(Database):
 	SELECT_SONG_COUNT = """
 		SELECT %s FROM %s WHERE %s = %%s;
 	""" % (Database.FIELD_COUNT, SONGS_COUNT_TABLENAME, Database.FIELD_SONGNAME)
+
+	SELECT_SONG_COUNT = """
+		SELECT %s FROM %s WHERE %s = %%s AND %s =%%s;
+	""" % (Database.FIELD_COUNT, RADIO_SONG_TABLENAME, Database.FIELD_RADIO_NAME, Database.FIELD_SONGNAME)
+
+	SELECT_RADIO_URL = """
+		SELECT %s FROM %s WHERE %s = %%s;
+	""" % (Database.FIELD_RADIO_URL, RADIO_TABLENAME, Database.FIELD_RADIO_NAME)
+
+	SELECT_ALL_RADIO = """
+		SELECT %s, %s FROM %s;
+	""" % (Database.FIELD_RADIO_NAME, Database.FIELD_RADIO_URL, RADIO_TABLENAME)
+
+	# SELECT_RADIO_NAME = """
+	# 	SELECT %s FROM %s WHERE %s = %%s;
+	# """ % (Database.FIELD_RADIO_NAME, RADIO_TABLENAME, Database.FIELD_RADIO_ID)
 	
 	SELECT_NUM_FINGERPRINTS = """
 		SELECT COUNT(*) as n FROM %s
@@ -147,6 +197,8 @@ class SQLDatabase(Database):
 	DROP_FINGERPRINTS = "DROP TABLE IF EXISTS %s;" % FINGERPRINTS_TABLENAME
 	DROP_SONGS = "DROP TABLE IF EXISTS %s;" % SONGS_TABLENAME
 	DROP_SONGS_COUNT = "DROP TABLE IF EXISTS %s;" % SONGS_COUNT_TABLENAME
+	DROP_RADIO_TABLE = "DROP TABLE IF EXISTS %s;" % RADIO_TABLENAME
+	DROP_RADIO_SONG_TABLE = "DROP TABLE IF EXISTS %s;" % RADIO_SONG_TABLENAME
 
 	# update
 	UPDATE_SONG_FINGERPRINTED = """
@@ -156,6 +208,10 @@ class SQLDatabase(Database):
 	UPDATE_SONG_COUNT = """
 		UPDATE %s SET %s = %%s WHERE %s = %%s
 	""" % (SONGS_COUNT_TABLENAME, Database.FIELD_COUNT, Database.FIELD_SONGNAME)
+
+	UPDATE_RADIO_SONG_COUNT = """
+		UPDATE %s SET %s = %%s WHERE %s = %%s AND %s = %%s
+	""" % (RADIO_SONG_TABLENAME, Database.FIELD_COUNT, Database.FIELD_RADIO_NAME, Database.FIELD_SONGNAME)
 
 	# delete
 	DELETE_UNFINGERPRINTED = """
@@ -183,6 +239,8 @@ class SQLDatabase(Database):
 			cur.execute(self.CREATE_SONGS_TABLE)
 			cur.execute(self.CREATE_FINGERPRINTS_TABLE)
 			cur.execute(self.CREATE_SONGS_COUNT_TABLE)
+			cur.execute(self.CREATE_RADIO_TABLE)
+			cur.execute(self.CREATE_RADIO_SONG_COUNT)
 			cur.execute(self.DELETE_UNFINGERPRINTED)
 
 	def empty(self):
@@ -197,6 +255,9 @@ class SQLDatabase(Database):
 			cur.execute(self.DROP_FINGERPRINTS)
 			cur.execute(self.DROP_SONGS)
 			cur.execute(self.DROP_SONGS_COUNT)
+			# Tables are not dropped it might be used for futher study
+			# cur.execute(self.DROP_RADIO_TABLE)
+			# cur.execute(self.DROP_RADIO_SONG_COUNT)
 
 		self.setup()
 
@@ -260,10 +321,28 @@ class SQLDatabase(Database):
 			cur.execute(self.SELECT_SONG_COUNT, (song_name,))
 			return cur.fetchone()
 
+	def get_radio_url(self, radio_name):
+
+		with self.cursor(cursor_class=cursor.MySQLCursorDict) as cur:
+			cur.execute(self.SELECT_RADIO_URL, (radio_name,))
+			return cur.fetchone()
+
+	def get_radio_song_count(self, radio_name, song_name):
+
+		with self.cursor(cursor_class=cursor.MySQLCursorDict) as cur:
+			cur.execute(self.SELECT_SONG_COUNT, (radio_name, song_name,))
+			return cur.fetchone()
+
 	def update_song_count(self, song_name, count):
 
 		with self.cursor() as cur:
 			cur.execute(self.UPDATE_SONG_COUNT,(count, song_name))
+
+	
+	def update_radio_song_count(self, radio_name, song_name, count):
+
+		with self.cursor() as cur:
+			cur.execute(self.UPDATE_RADIO_SONG_COUNT,(count, radio_name, song_name))
 
 	def insert(self, hash, sid, offset):
 		"""
@@ -285,6 +364,24 @@ class SQLDatabase(Database):
 		with self.cursor() as cur:
 			cur.execute(self.INSERT_COUNT,(songname,))
 			return cur.lastrowid
+
+	def insert_radio(self, radio_name, radio_url):
+
+		with self.cursor() as cur:
+			cur.execute(self.INSERT_RADIO,(radio_name, radio_url,))
+			return cur.lastrowid
+
+	def insert_radio_song(self, radio_name, song_name, count=1):
+
+		with self.cursor() as cur:
+			cur.execute(self.INSERT_RADIO_SONG_COUNT,(radio_name, song_name, count))
+			return cur.lastrowid
+
+	def get_all_radio(self):
+		query = self.SELECT_ALL_RADIO
+		with self.cursor(cursor_class=cursor.MySQLCursorDict)  as cur:
+			cur.execute(query)
+			return cur.fetchall()
 
 	def query(self, hash):
 		"""

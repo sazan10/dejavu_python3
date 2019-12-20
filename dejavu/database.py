@@ -14,6 +14,10 @@ class Database():
     FIELD_OFFSET = 'offset'
     FIELD_HASH = 'hash'
     FIELD_COUNT = 'count'
+    FIELD_RADIO_ID = 'radio_id'
+    FIELD_RADIO_NAME = 'radio_name'
+    FIELD_RADIO_URL = 'radio_url'
+    FIELD_RADIO_SONG_ID = 'radio_song_id'
 
     # Name of your Database subclass, this is used in configuration
     # to refer to your class
@@ -128,7 +132,31 @@ class Database():
     @abc.abstractmethod
     def update_song_count(self, song_name, count):
         pass
+
+    @abc.abstractmethod
+    def insert_radio_song(self, radio_name, song_name, count=1):
+        pass
+
+    @abc.abstractmethod
+    def insert_radio(self, radio_name, radio_url):
+        pass
+
+    @abc.abstractmethod
+    def update_radio_song_count(self, radio_name, song_name, count):
+        pass
+
+    @abc.abstractmethod
+    def get_radio_song_count(self, radio_name, song_name):
+        pass
+
+    @abc.abstractmethod
+    def get_radio_url(self, radio_name):
+        pass
     
+    @abc.abstractmethod
+    def get_all_radio(self):
+        pass
+
     @abc.abstractmethod
     def query(self, hash):
         """

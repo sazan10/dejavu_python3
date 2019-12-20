@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
  Identified with very less confidence 6 Coca-Cola Jigri Pack (Coca-Cola Nepal)
  Identified with very less confidence 2 First Dashain of a New Bride  ft. Swastima Khadka Nischal Basnet  Mann Kholaun Coke Sanga (Nepal)(1)
@@ -54314,3 +54315,7 @@
  Identified with very less confidence 2 aayush medical hall
  Identified with very less confidence 3 nasib garment udhyog pvt ltd
  Identified with very less confidence 6 lumbini banijya campus
+=======
+identified with high confidence 8298
+ Identified with high confidence 8298 recording2
+>>>>>>> 22f04d34a0c185e9cd3076ac9d2c7449be0c5f60

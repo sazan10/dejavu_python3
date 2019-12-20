@@ -19,18 +19,21 @@ if __name__ == '__main__':
 	djv.fingerprint_directory("22050mp3", [".mp3"])
 
 	# Recognize audio from a file
-	#song = djv.recognize(FileRecognizer, "ads/hyundai offer.mp3")
-	#if song['confidence']>100:
-#		db_cls = get_database(config.get("database_type", None))
-#		db = db_cls(**config.get("database", {}))
-#		db.setup()
-#		count = db.get_song_count_by_name(song["song_name"])
-#		db.update_song_count(song["song_name"],count['count']+1)
-#		
-#		print("From file we recognized: {}, count: {}\n".format(song["song_name"], count['count']+1))
-#	else:
-#		print("None")
-#	print("From file we recognized: {}\n".format(song))
+	song = djv.recognize(FileRecognizer, "mp3/recording2.mp3")
+	if song['confidence']>100:
+		db_cls = get_database(config.get("database_type", None))
+		db = db_cls(**config.get("database", {}))
+		db.setup()
+		count = db.get_song_count_by_name(song["song_name"])
+		db.update_song_count(song["song_name"],count['count']+1)
+		with open('log.txt','a') as writeFIle:
+			writeFIle.write("\n Identified with high confidence %d %s" %(song['confidence'],song["song_name"]))
+		print("From file we recognized: {}, count: {}\n".format(song["song_name"], count['count']+1))
+	else:
+		print("None")
+		with open('log.csv','a') as writeFIle:
+			writeFIle.write("identified with very less confidence %d %s"%(song['confidence'],song["song_name"]))
+	print("From file we recognized: {}\n".format(song))
 
 	#song = djv.recognize(FileRecognizer, "mp3/01 Aakhako Bato.mp3")
 	#print("From file we recognized: {}\n".format(song))
