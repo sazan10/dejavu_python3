@@ -62,12 +62,12 @@ with open("dejavu.cnf") as f:
 
 def mp_worker(urldata):
     url=None
-    number=None
+    station_name=None
     song=None
     name =None
     try:
-        url, number=urldata
-        name= 'recording' +number+'.mp3'
+        url, station_name=urldata
+        name= 'recording' +station_name+'.mp3'
     except ValueError:
         pass
     try:
@@ -87,11 +87,11 @@ def mp_worker(urldata):
         elif song['confidence']>=40:
             count = db.get_song_count_by_name(song["song_name"])
             db.update_song_count(song["song_name"],count['count']+1)
-            if db.get_radio_song_count(number,song["song_name"]) == None:
-                db.insert_radio_song(number,song["song_name"])
+            if db.get_radio_song_count(station_name,song["song_name"]) == None:
+                db.insert_radio_song(station_name,song["song_name"])
             else:
-                count = db.get_radio_song_count(number,song["song_name"])
-                db.update_radio_song_count(number,song["song_name"],count['count'] +1)
+                count = db.get_radio_song_count(station_name,song["song_name"])
+                db.update_radio_song_count(station_name,song["song_name"],count['count'] +1)
             print("From file we recognized: {} {} {}\n".format(song["song_name"], count,song['confidence']))
         else:
             print("Identified with very low confidence ",song['confidence'], name, song['song_name'])
