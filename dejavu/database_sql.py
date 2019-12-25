@@ -160,7 +160,7 @@ class SQLDatabase(Database):
 		SELECT %s, HEX(%s) as %s FROM %s WHERE %s = %%s;
 	""" % (Database.FIELD_SONGNAME, Database.FIELD_FILE_SHA1, Database.FIELD_FILE_SHA1, SONGS_TABLENAME, Database.FIELD_SONG_ID)
 	
-	SELECT_SONG_COUNT = """
+	SELECT_SONG_COUNT1 = """
 		SELECT %s FROM %s WHERE %s = %%s;
 	""" % (Database.FIELD_COUNT, SONGS_COUNT_TABLENAME, Database.FIELD_SONGNAME)
 
@@ -318,7 +318,7 @@ class SQLDatabase(Database):
 	def get_song_count_by_name(self, song_name):
 
 		with self.cursor(cursor_class=cursor.MySQLCursorDict) as cur:
-			cur.execute(self.SELECT_SONG_COUNT, (song_name,))
+			cur.execute(self.SELECT_SONG_COUNT1, (song_name,))
 			return cur.fetchone()
 
 	def get_radio_url(self, radio_name):
