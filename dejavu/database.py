@@ -18,6 +18,9 @@ class Database():
     FIELD_RADIO_NAME = 'radio_name'
     FIELD_RADIO_URL = 'radio_url'
     FIELD_RADIO_SONG_ID = 'radio_song_id'
+    FIELD_RADIO_SONG_DATETIME = 'listened_datetime'
+    FIELD_RADIO_SONG_COMPANY = 'company'
+    FIELD_RADIO_SONG_CONFIDENCE = 'confidence'
 
     # Name of your Database subclass, this is used in configuration
     # to refer to your class
@@ -134,7 +137,7 @@ class Database():
         pass
 
     @abc.abstractmethod
-    def insert_radio_song(self, radio_name, song_name, count=1):
+    def insert_radio_song(self, radio_name, song_name, company, confidence, datetime):
         pass
 
     @abc.abstractmethod

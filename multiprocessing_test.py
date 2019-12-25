@@ -1,6 +1,8 @@
 
 import multiprocessing
 import time
+import datetime
+import pytz
 import urllib.request
 import json
 from dejavu import Dejavu
@@ -78,22 +80,26 @@ def mp_worker(urldata):
     try:
         djv = Dejavu(config)
         song = djv.recognize(FileRecognizer, name)
-        # print("From Stream we recognized: {}\n".format(song))
         if song is None:
             print("NONE")
         elif song['confidence']>=100:
             db_cls = get_database(config.get("database_type", None))
             db = db_cls(**config.get("database", {}))
             db.setup()
-            count = db.get_song_count_by_name(song["song_name"])
-            db.update_song_count(song["song_name"],count['count']+1)
+            # count = db.get_song_count_by_name(song["song_name"])
+            # db.update_song_count(song["song_name"],count['count']+1)
+
+            d = datetime.datetime.now()
+            timezone = pytz.timezone("Asia/Katmandu")
+            d_local = timezone.localize(d)  
+            db.insert_radio_song(number, song["song_name"], 'Begari Guys', int(song['confidence']), d_local)
             print("From file we recognized: {} {}\n".format(song["song_name"], count))
             with open('log.txt','a') as writeFile:
                 writeFile.write("\n Identified with high confidence %d %s" %(song['confidence'],song["song_name"]))
         else:
-            print("Identified with very low confidence %d" %song['confidence'])
             with open('log.txt','a') as writeFile:
                 writeFile.write("\n Identified with very less confidence %d %s" %(song['confidence'],song["song_name"]))
+            print("From file we recognized: {} {} {}\n".format(song["song_name"], count,song['confidence']))
     except Exception as e:
         print(e)
 

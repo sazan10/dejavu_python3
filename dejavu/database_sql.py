@@ -113,11 +113,13 @@ class SQLDatabase(Database):
 			`%s` mediumint unsigned not null auto_increment,
 			`%s` varchar(250) not null,
 			`%s` varchar(250) not null,
-			`%s` int unsigned not null default 0,
+			`%s` varchar(250) default 'Begari',
+			`%s` int unsigned not null,
+			`%s` datetime,
 		PRIMARY KEY (`%s`)
 	) ENGINE=INNODB;""" %(
 		RADIO_SONG_TABLENAME, Database.FIELD_RADIO_SONG_ID, Database.FIELD_RADIO_NAME, Database.FIELD_SONGNAME,
-		Database.FIELD_COUNT,
+		Database.FIELD_RADIO_SONG_COMPANY, Database.FIELD_RADIO_SONG_CONFIDENCE, Database.FIELD_RADIO_SONG_DATETIME,
 		Database.FIELD_RADIO_SONG_ID
 	)
 
@@ -138,8 +140,9 @@ class SQLDatabase(Database):
 		RADIO_TABLENAME, Database.FIELD_RADIO_NAME, Database.FIELD_RADIO_URL
 	)
 
-	INSERT_RADIO_SONG_COUNT = "INSERT INTO %s (%s, %s, %s) values (%%s, %%s, %%s);" % (
-		RADIO_SONG_TABLENAME, Database.FIELD_RADIO_NAME, Database.FIELD_SONGNAME, Database.FIELD_COUNT
+	INSERT_RADIO_SONG_COUNT = "INSERT INTO %s (%s, %s, %s, %s, %s) values (%%s, %%s, %%s, %%s, %%s);" % (
+		RADIO_SONG_TABLENAME, Database.FIELD_RADIO_NAME, Database.FIELD_SONGNAME, Database.FIELD_RADIO_SONG_COMPANY,
+		Database.FIELD_RADIO_SONG_CONFIDENCE, Database.FIELD_RADIO_SONG_DATETIME
 	)
 
 	# selects
@@ -371,10 +374,10 @@ class SQLDatabase(Database):
 			cur.execute(self.INSERT_RADIO,(radio_name, radio_url,))
 			return cur.lastrowid
 
-	def insert_radio_song(self, radio_name, song_name, count=1):
+	def insert_radio_song(self, radio_name, song_name, company, confidence, datetime):
 
 		with self.cursor() as cur:
-			cur.execute(self.INSERT_RADIO_SONG_COUNT,(radio_name, song_name, count))
+			cur.execute(self.INSERT_RADIO_SONG_COUNT,(radio_name, song_name, company, confidence, datetime))
 			return cur.lastrowid
 
 	def get_all_radio(self):
