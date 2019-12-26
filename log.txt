@@ -54319,3 +54319,163 @@
 identified with high confidence 8298
  Identified with high confidence 8298 recording2
 >>>>>>> 22f04d34a0c185e9cd3076ac9d2c7449be0c5f60
+
+ Identified with very less confidence 6 nmb_preapproved_home_loan
+ Identified with very less confidence 3 kalika homeo pharmacy
+ Identified with very less confidence 3 goodlife_digestive_healthy_hunucha
+ Identified with very less confidence 6 current masala
+ Identified with very less confidence 3 butwal city scan and imaging center
+ Identified with very less confidence 6 nasib garment udhyog pvt ltd
+ Identified with very less confidence 2 current masala
+ Identified with very less confidence 3 don children english high school
+ Identified with very less confidence 12 shree shree international
+ Identified with very less confidence 4 oxford montesori
+ Identified with very less confidence 6 ncell_ma_code_aayo_22
+ Identified with very less confidence 3 aerolight aec block
+ Identified with very less confidence 6 cromton pump
+ Identified with very less confidence 6 adhdhunik samaj dental care
+ Identified with very less confidence 2 chandan pharmacy
+ Identified with very less confidence 3 national clinic pvt ltd
+ Identified with very less confidence 6 rara chowchow
+ Identified with very less confidence 6 nmb bank1
+ Identified with very less confidence 1 norvic medical hall butwal
+ Identified with very less confidence 4 cromton pump
+ Identified with very less confidence 2 national clinic pvt ltd
+ Identified with very less confidence 5 nmb bank2
+ Identified with very less confidence 6 suchana tatha sanchar kendra nava balak
+ Identified with very less confidence 4 aayush medical hall
+ Identified with very less confidence 4 oxford montesori
+ Identified with very less confidence 6 hyundai offer
+ Identified with very less confidence 6 pabitra dairy icecream
+ Identified with very less confidence 6 panchakanya rmc
+ Identified with very less confidence 9 om palpali sunchadi pasal
+ Identified with very less confidence 6 don children english high school
+ Identified with very less confidence 3 nmb bank
+ Identified with very less confidence 6 suchana tatha sanchar kendra nava balak
+ Identified with very less confidence 6 shree shree international
+ Identified with very less confidence 2 kalika homeo pharmacy
+ Identified with very less confidence 4 om palpali sunchadi pasal
+ Identified with very less confidence 4 suchana tatha sanchar kendra nava balak
+ Identified with very less confidence 4 suchana tatha sanchar kendra fistula
+ Identified with very less confidence 6 dixchya ayurved clinic
+ Identified with very less confidence 4 kalika homeo pharmacy
+ Identified with very less confidence 6 civil bank
+ Identified with very less confidence 4 hyundai offer
+ Identified with very less confidence 9 nasib garment udhyog pvt ltd
+ Identified with very less confidence 2 nmb bank
+ Identified with very less confidence 6 cromton pump
+ Identified with very less confidence 4 life education
+ Identified with very less confidence 4 life education
+ Identified with very less confidence 7 lumbini banijya campus
+ Identified with very less confidence 12 suchana tatha sanchar kendra fistula
+ Identified with very less confidence 4 lumbini banijya campus
+ Identified with very less confidence 36 suchana tatha sanchar kendra fistula
+ Identified with very less confidence 4 mata manakamana aarogya kendra
+ Identified with very less confidence 6 new jk tailors
+ Identified with very less confidence 6 nic asia
+ Identified with very less confidence 6 hotel royal
+ Identified with very less confidence 7 aerolight aec block
+ Identified with very less confidence 4 knp paint
+ Identified with very less confidence 6 oxford montesori
+ Identified with very less confidence 12 don children english high school
+ Identified with very less confidence 2 sagarmatha cement
+ Identified with very less confidence 3 norvic medical hall butwal
+ Identified with very less confidence 6 argakhachi cement
+ Identified with very less confidence 2 nasib garment udhyog pvt ltd
+ Identified with very less confidence 4 four square auto workshop
+ Identified with very less confidence 6 nmb bank1
+ Identified with very less confidence 4 nasib garment udhyog pvt ltd
+ Identified with very less confidence 6 adhikari jewllery
+ Identified with very less confidence 6 adhdhunik samaj dental care
+ Identified with very less confidence 8 lumbini banijya campus
+ Identified with very less confidence 6 hyundai offer
+ Identified with very less confidence 6 bhattari aayurbed
+ Identified with very less confidence 6 rara chowchow
+ Identified with very less confidence 6 machhapuchre bank
+ Identified with very less confidence 4 nasib garment udhyog pvt ltd
+ Identified with very less confidence 15 ime_life_jewan_bima
+ Identified with very less confidence 6 kalika enterprises
+ Identified with very less confidence 6 tilotama hospital
+ Identified with very less confidence 8 hotel dream land
+ Identified with very less confidence 6 kalika homeo pharmacy
+ Identified with very less confidence 4 nmb bank2
+ Identified with very less confidence 4 pabitra dairy icecream1
+ Identified with very less confidence 6 mata manakamana aarogya kendra
+ Identified with very less confidence 3 wai wai all day in a week ad
+ Identified with very less confidence 3 euro kids
+ Identified with very less confidence 6 suchana tatha sanchar kendra nava balak
+ Identified with very less confidence 6 best finance
+ Identified with very less confidence 3 berger paint
+ Identified with very less confidence 6 kalika homeo pharmacy
+ Identified with very less confidence 6 four square auto workshop
+ Identified with very less confidence 6 ncell_ma_code_aayo_22
+ Identified with very less confidence 2 ncell_ma_code_aayo_22
+ Identified with very less confidence 4 sagarmatha cement
+ Identified with very less confidence 7 aerolight aec block
+ Identified with very less confidence 6 e_planet_aus_uni_fair
+ Identified with very less confidence 4 ncell_ma_code_aayo_22
+ Identified with very less confidence 6 aerolight aec block
+ Identified with very less confidence 9 rara chowchow
+ Identified with very less confidence 2 rara chowchow
+ Identified with very less confidence 3 nic asia
+ Identified with very less confidence 6 suchana tatha sanchar kendra nava balak
+ Identified with very less confidence 4 boroplus
+ Identified with very less confidence 6 hotel dream land
+ Identified with very less confidence 4 nic asia
+ Identified with very less confidence 9 subekshya girls hostel
+ Identified with very less confidence 3 kalika enterprises
+ Identified with very less confidence 6 ncell international call bonus
+ Identified with very less confidence 12 four square auto workshop
+ Identified with very less confidence 9 chandan pharmacy
+ Identified with very less confidence 4 aerolight aec block
+ Identified with very less confidence 6 citizen bank
+ Identified with very less confidence 4 argakhachi cement
+ Identified with very less confidence 9 rabin catering and cooking service
+ Identified with very less confidence 3 mahalaxmi cement
+ Identified with very less confidence 9 jay shree manakamana electronics
+ Identified with very less confidence 12 four square auto workshop
+ Identified with very less confidence 6 kalika homeo pharmacy
+ Identified with very less confidence 7 himal_remit_saubhagya_hamro
+ Identified with very less confidence 6 best finance
+ Identified with very less confidence 5 e_planet_aus_uni_fair
+ Identified with very less confidence 6 hyundai offer
+ Identified with very less confidence 3 hotel dream land
+ Identified with very less confidence 2 himchuli chicken
+ Identified with very less confidence 6 hotel dream land
+ Identified with very less confidence 6 boroplus1
+ Identified with very less confidence 6 nic asia
+ Identified with very less confidence 6 kalika homeo pharmacy
+ Identified with very less confidence 6 rara chowchow
+ Identified with very less confidence 6 om palpali sunchadi pasal
+ Identified with very less confidence 4 mata manakamana aarogya kendra
+ Identified with very less confidence 2 current masala
+ Identified with very less confidence 6 cromton pump
+ Identified with very less confidence 3 oxford montesori
+ Identified with very less confidence 6 tilotama hospital
+ Identified with very less confidence 4 rabin catering and cooking service
+ Identified with very less confidence 6 inverter house
+ Identified with very less confidence 7 life education
+ Identified with very less confidence 2 national clinic pvt ltd
+ Identified with very less confidence 2 zandu bam
+ Identified with very less confidence 3 don children english high school
+ Identified with very less confidence 2 jay shree manakamana electronics
+ Identified with very less confidence 6 goodlife_digestive_healthy_hunucha
+ Identified with very less confidence 6 aayush medical hall
+ Identified with very less confidence 6 hotel dream land
+ Identified with very less confidence 4 best finance
+ Identified with very less confidence 6 norvic medical hall butwal
+ Identified with very less confidence 6 don children english high school
+ Identified with very less confidence 6 inverter house
+ Identified with very less confidence 2 ncell international call bonus
+ Identified with very less confidence 3 kamana sewa bikash bank limited
+ Identified with very less confidence 4 goodlife_digestive_healthy_hunucha
+ Identified with very less confidence 2 best finance
+ Identified with very less confidence 6 shree jagdamba siram dashan suppliers
+ Identified with very less confidence 7 alam devi printing press
+ Identified with very less confidence 4 rara chowchow
+ Identified with very less confidence 6 nmb bank
+ Identified with very less confidence 6 aayush medical hall
+ Identified with very less confidence 4 euro kids
+ Identified with very less confidence 3 hotel dream land
+ Identified with very less confidence 6 current masala
+ Identified with very less confidence 6 nmb bank2

@@ -93,13 +93,13 @@ def mp_worker(urldata):
             timezone = pytz.timezone("Asia/Katmandu")
             d_local = timezone.localize(d)  
             db.insert_radio_song(number, song["song_name"], 'Begari Guys', int(song['confidence']), d_local)
-            print("From file we recognized: {} {}\n".format(song["song_name"], count))
+            print("From file we recognized: {} {}\n".format(song["song_name"]))
             with open('log.txt','a') as writeFile:
                 writeFile.write("\n Identified with high confidence %d %s" %(song['confidence'],song["song_name"]))
         else:
             with open('log.txt','a') as writeFile:
                 writeFile.write("\n Identified with very less confidence %d %s" %(song['confidence'],song["song_name"]))
-            print("From file we recognized: {} {} {}\n".format(song["song_name"], count,song['confidence']))
+            print("From file we recognized: {} {} {}\n".format(song["song_name"],song['confidence']))
     except Exception as e:
         print(e)
 
